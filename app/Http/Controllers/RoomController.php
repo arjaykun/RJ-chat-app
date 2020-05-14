@@ -34,7 +34,7 @@ class RoomController extends Controller
 
    public function store(Request $request) {
    	$data = $request->validate([
-         'name' => 'required|min:30',
+         'name' => 'required|max:30',
          'password' => 'nullable|min:3'
       ]);
 
@@ -43,8 +43,27 @@ class RoomController extends Controller
       return redirect()->route('rooms.show', ['room' => $room->id]);
    }
 
-   public function show(Room $room) {
-
+   public function show(Request $request, Room $room) {
+      $request->session()->forget("room_password_{$room->id}");
    	return view('chat.index', ['room' => $room]);
+   }
+
+   public function password(Room $room) {
+      if($room->password)
+         return view('room.password', ['room' => $room]);
+
+      return redirect('/home');
+   }
+
+   public function confirm(Request $request, Room $room) {
+      if($room->password === $request->password) {
+         $request->session()->put("room_password_{$room->id}", 1);
+
+         return redirect()->route('rooms.show', ['room' => $room->id]);
+      } 
+
+      $request->session()->flash('wrong_password', 'You have entered wrong password.');
+
+      return back();
    }
 }

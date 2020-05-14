@@ -26,4 +26,8 @@ Route::get('/chat/messages/{room}', 'MessageController@getMessages');
 Route::get('/home', 'RoomController@index')->name('rooms.index');
 Route::get('/rooms/create', 'RoomController@create')->name('rooms.create');
 Route::post('/rooms', 'RoomController@store')->name('rooms.store');
-Route::get('/chat/{room}', 'RoomController@show')->name('rooms.show');
+Route::get('/chat/{room}', 'RoomController@show')->name('rooms.show')->middleware('room.password');
+
+Route::get('/chat/{room}/password', 'RoomController@password')->name('rooms.password');
+Route::post('/chat/{room}/password', 'RoomController@confirm')->name('rooms.confirm');
+

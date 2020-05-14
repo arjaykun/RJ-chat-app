@@ -37,7 +37,7 @@
         <div class="form-group">
             <label for="password">Password</label>
 
-            <input id="password" type="text" class="form-control rounded @error('password') is-invalid @enderror" name="password" value="{{ old('password') }}" placeholder="Room password">
+            <input id="password" type="password" class="form-control rounded @error('password') is-invalid @enderror" name="password" value="{{ old('password') }}" placeholder="Room password">
 
             <i><small>Leave password blank to make room public ( w/o password ).</small></i>
 
