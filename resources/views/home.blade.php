@@ -1,33 +1,56 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card"> 
-                <div class="card-header bg-primary d-flex justify-content-between align-items-center">
-                    <h5 class="text-light font-weight-bold">Rooms</h5>
-                    <button class="btn btn-success btn-sm">Add New Room</button>
-                </div>
+<div class="d-flex justify-content-center">
 
-                <div class="card-body">
-                    
-                    <ul class="list-group">
-                        @forelse ($rooms as $room)
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>{{ $room->name }} ( {{ $room->id }} ) </div>
-                                <a href="{{ route('rooms.show', ['room' => $room]) }}" class="btn btn-primary btn-sm rounded">
-                                    Join
-                                </a>
-                            </li>
-                        @empty
-                            <div class="alert alert-warning">No Room Available</div>
-                        @endforelse
-                    </ul>
-                    
-                </div>
-            </div>
+    <div class="border bg-white rounded px-4 py-2 my-container text-secondary shadow" style="width: 430px"> 
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <h4 class="font-weight-bold text-primary pt-4 pb-3">
+               <a href="/">Chat Rooms</a>
+            </h4>
+
+            <a href="{{ route('rooms.create') }}" class="btn btn-sm btn-primary">Add New Room</a>   
         </div>
-    </div>
+
+        <div class="py-1">
+            <form method="get">
+                  {{-- @csrf --}}
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" placeholder="Search room here..." aria-label="Search room here..." aria-describedby="search room" name="search">
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit">Search</button>
+                      </div>
+                    </div>
+                </div>
+      
+            </form>
+        </div>
+
+        <ul class="list-group">
+            @forelse ($rooms as $room)                
+                <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center flex-wrap">
+                    <span>
+                        {{ $room->name }} 
+                        <small class="text-light badge badge-pill badge-dark">( {{ $room->messages_count }} msgs. ) </small>
+                    </span>
+                    <a href="{{ route('rooms.show', ['room' => $room->id]) }}" class="btn btn-sm btn-primary">Join</a>
+                </li>
+                @empty
+                <h5 class="text-center bg-secondary py-5 text-white rounded">No Room found</h5>
+            @endforelse
+        </ul>
+
+        <hr>
+
+        <h5 class="text-center">
+            Chat at your own risk! >:D
+        </h5>
+
+        <hr>
+        
+    <div> 
+               
 </div>
 @endsection

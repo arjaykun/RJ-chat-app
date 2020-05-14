@@ -9,9 +9,12 @@
 					</h6>
 				</div>
 
-				<div v-chat-scroll class="w-100 p-2 box-height">
+				<div v-chat-scroll class="w-100 p-2 box-height" style="position:relative">
 					<div v-for="(message, index) in messages" :key="index">
-						<Message :message="message" :self="user.id" />
+						<Message :message="message" :self="user.id"/>
+					</div>
+					<div class="w-auto h-auto d-flex justify-content-center align-items-center loader">
+						<img height="50px" width="50px" :src="spinner" alt="loading..." v-show="loading">
 					</div>
 				</div>
 
@@ -37,9 +40,8 @@
 			
 		</div>
 
-
 		<div class="bg-white shadow chatbox mx-2" style="height:520px">
-			<UserList :users="users" :user="user" />
+			<UserList :users="users" :user="user" :room="room" />
 		</div>
 
 	</div>
@@ -60,15 +62,17 @@ export default {
   data () {
     return {
     	users: [
-    		{id:1,name: 'John Wick', email: 'test.email@gmail.com'},
-    		{id:2,name: 'Ethan Hunt', email: 'test.email@gmail.com'},
-    		{id:3,name: 'John Doe', email: 'test.email@gmail.com'},
-    		{id:4,name: 'XXX', email: 'test.email@gmail.com'},
+    		// {id:1,name: 'John Wick', email: 'test.email@gmail.com'},
+    		// {id:2,name: 'Ethan Hunt', email: 'test.email@gmail.com'},
+    		// {id:3,name: 'John Doe', email: 'test.email@gmail.com'},
+    		// {id:4,name: 'XXX', email: 'test.email@gmail.com'},
     	],
     	messages: [],
     	message: '',
     	sendLoading: false,
+    	loadingMessage: { message: '',loading:true, user: { name: 'system' } },
     	loading: false,
+    	spinner: window.host + "/spinner.svg",
     }
   },
 
@@ -109,21 +113,7 @@ export default {
 
 				this.messages.push(event.message);
 
-			})
-			.listenForWhisper('typing', user => { 
-				const userRef = this.$refs["user_"+user.id][0];
-				const classes = ['badge', 'badge-warning'];
-				if(userRef.innerText.trim() == ""){
-					userRef.classList.add(...classes);    
-  			  userRef.innerText = "typing";
-
-  			  setTimeout( function() {
-  			  		userRef.classList.remove(...classes);    
-			  			userRef.innerText = "";
-  			  }, 2000)
-				}
-				
-   	 	});
+			});
   },
 
   methods: {
@@ -132,15 +122,15 @@ export default {
 
   			try { 
   				this.sendLoading = true;
+  				this.messages.push(this.loadingMessage);
   				const temp = this.message;
   				this.message = '';
 
-	  			const res = await axios
-	  													.post('/chat/messages', 
-	  															{message:temp, room_id:this.room.id});
+	  			const res = await axios.post('/chat/messages', {message:temp, room_id:this.room.id});
 
 	  			if (res.status === 201 || res.status === 200) {  
 
+		  			this.messages = [...this.messages.filter( m => !m.hasOwnProperty('loading'))]; //delete loading message & then push the actual message
 						this.messages.push({
 		  				message: temp,
 		  				user: this.user,
@@ -214,5 +204,13 @@ export default {
 
 	.rounded-bottom-right {
 		border-radius: 0 0 4px 0;
+	}
+	.loader {
+		z-index: 9999;
+		position: absolute;
+		top:0;
+		right:0;
+		left:0;
+		bottom: 0;
 	}
 </style>

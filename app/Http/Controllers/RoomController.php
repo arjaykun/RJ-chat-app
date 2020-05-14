@@ -14,17 +14,33 @@ class RoomController extends Controller
 
 	 }
    public function index() {
-   	$rooms = Room::all();
+
+      $search = request()->query('search');
+
+      if($search) {
+         $rooms = Room::where('name', 'like', "%{$search}%")
+                        ->withCount('messages')
+                        ->get();
+      } else {
+         $rooms = Room::withCount('messages')->get();
+      }
 
    	return view('home', ['rooms' => $rooms]);
    }
 
    public function create() {
-
+      return view('room.create');
    }
 
-   public function store() {
-   	
+   public function store(Request $request) {
+   	$data = $request->validate([
+         'name' => 'required|min:30',
+         'password' => 'nullable|min:3'
+      ]);
+
+      $room = Room::create($data);
+
+      return redirect()->route('rooms.show', ['room' => $room->id]);
    }
 
    public function show(Room $room) {

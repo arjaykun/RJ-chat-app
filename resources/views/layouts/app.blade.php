@@ -20,14 +20,14 @@
          <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
           <h5 class="mr-auto">
-            <a href="/">
+            <a href="/home">
                 {{ config('app.name', 'Laravel') }}      
             </a>
           </h5>
 
           <!-- Topbar Navbar -->
-          <ul class="navbar-nav ml-auto">
-
+          <ul class="navbar-nav ml-auto align-items-center">
+            <img src="{{ auth()->user()->avatar }}" alt="{{ auth()->user()->name }}" width="30" height="30">
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
 
@@ -54,8 +54,11 @@
     </div>
 
     
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
+    <!-- Scripts -->   
+    <script>
+      window.host= '{{ config('app.url', 'http://laravel-chat.test') }}';
+    </script>
+    <script src="{{ asset('js/app.js') }}"></script>
+ 
 </body>
 </html>

@@ -1926,10 +1926,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _UserList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./UserList */ "./resources/js/components/UserList.vue");
 
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
 //
 //
 //
@@ -1988,27 +2002,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
-      users: [{
-        id: 1,
-        name: 'John Wick',
-        email: 'test.email@gmail.com'
-      }, {
-        id: 2,
-        name: 'Ethan Hunt',
-        email: 'test.email@gmail.com'
-      }, {
-        id: 3,
-        name: 'John Doe',
-        email: 'test.email@gmail.com'
-      }, {
-        id: 4,
-        name: 'XXX',
-        email: 'test.email@gmail.com'
-      }],
+      users: [// {id:1,name: 'John Wick', email: 'test.email@gmail.com'},
+        // {id:2,name: 'Ethan Hunt', email: 'test.email@gmail.com'},
+        // {id:3,name: 'John Doe', email: 'test.email@gmail.com'},
+        // {id:4,name: 'XXX', email: 'test.email@gmail.com'},
+      ],
       messages: [],
       message: '',
       sendLoading: false,
-      loading: false
+      loadingMessage: {
+        message: '',
+        loading: true,
+        user: {
+          name: 'system'
+        }
+      },
+      loading: false,
+      spinner: window.host + "/spinner.svg"
     };
   },
   created: function created() {
@@ -2047,24 +2057,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       _this.messages.push(message);
     }).listen('ChatEvent', function (event) {
       _this.messages.push(event.message);
-    }).listenForWhisper('typing', function (user) {
-      var userRef = _this.$refs["user_" + user.id][0];
-      var classes = ['badge', 'badge-warning'];
-
-      if (userRef.innerText.trim() == "") {
-        var _userRef$classList;
-
-        (_userRef$classList = userRef.classList).add.apply(_userRef$classList, classes);
-
-        userRef.innerText = "typing";
-        setTimeout(function () {
-          var _userRef$classList2;
-
-          (_userRef$classList2 = userRef.classList).remove.apply(_userRef$classList2, classes);
-
-          userRef.innerText = "";
-        }, 2000);
-      }
     });
   },
   methods: {
@@ -2076,35 +2068,40 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 if (!(this.message.trim().length > 0)) {
-                  _context.next = 17;
+                  _context.next = 18;
                   break;
                 }
 
                 _context.prev = 1;
                 this.sendLoading = true;
+                this.messages.push(this.loadingMessage);
                 temp = this.message;
                 this.message = '';
-                _context.next = 7;
+                _context.next = 8;
                 return axios.post('/chat/messages', {
                   message: temp,
                   room_id: this.room.id
                 });
 
-              case 7:
+              case 8:
                 res = _context.sent;
 
                 if (res.status === 201 || res.status === 200) {
+                  this.messages = _toConsumableArray(this.messages.filter(function (m) {
+                    return !m.hasOwnProperty('loading');
+                  })); //delete loading message & then push the actual message
+
                   this.messages.push({
                     message: temp,
                     user: this.user
                   });
                 }
 
-                _context.next = 14;
+                _context.next = 15;
                 break;
 
-              case 11:
-                _context.prev = 11;
+              case 12:
+                _context.prev = 12;
                 _context.t0 = _context["catch"](1);
                 this.messages.push({
                   message: 'Oh snap! Failed to send message.',
@@ -2113,17 +2110,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   }
                 });
 
-              case 14:
-                _context.prev = 14;
+              case 15:
+                _context.prev = 15;
                 this.sendLoading = false;
-                return _context.finish(14);
+                return _context.finish(15);
 
-              case 17:
+              case 18:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[1, 11, 14, 17]]);
+        }, _callee, this, [[1, 12, 15, 18]]);
       }));
 
       function sendMessage() {
@@ -2225,22 +2222,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Message',
   props: ['message', 'self'],
+  data: function data() {
+    return {
+      spinner: window.host + "/spinner.svg"
+    };
+  },
   computed: {
     isSelf: function isSelf() {
       return +this.message.user.id === +this.self;
@@ -2291,9 +2281,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'UserList',
-  props: ['users', 'user'],
-  data: function data() {
-    return {};
+  props: ['users', 'user', 'room'],
+  created: function created() {
+    var _this = this;
+
+    Echo.join("chat.".concat(this.room.id)).listenForWhisper('typing', function (user) {
+      var userRef = _this.$refs["user_" + user.id][0];
+      var classes = ['badge', 'badge-warning'];
+
+      if (userRef.innerText.trim() == "") {
+        var _userRef$classList;
+
+        (_userRef$classList = userRef.classList).add.apply(_userRef$classList, classes);
+
+        userRef.innerText = "typing";
+        setTimeout(function () {
+          var _userRef$classList2;
+
+          (_userRef$classList2 = userRef.classList).remove.apply(_userRef$classList2, classes);
+
+          userRef.innerText = "";
+        }, 5000);
+      }
+    });
   }
 });
 
@@ -6842,7 +6852,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.chatbox[data-v-5142db38] {\n\twidth: 380px;\n}\n.userbox[data-v-5142db38] {\n\twidth:240px;\n}\n.box-height[data-v-5142db38] {\n\theight: 420px; \n\toverflow-y:scroll;\n}\n.input-chat[data-v-5142db38] {\n\tborder: none;\n\toutline: none;\n\twidth: 100%;\n}\n.btn[data-v-5142db38] {\n\tborder:0;\n\tborder-radius: 0;\n\twidth: 20%;\n\theight: 100%;\n}\n.rounded-bottom-left[data-v-5142db38] {\n\tborder-radius: 0 0 0 4px;\n}\n.rounded-bottom-right[data-v-5142db38] {\n\tborder-radius: 0 0 4px 0;\n}\n", ""]);
+exports.push([module.i, "\n.chatbox[data-v-5142db38] {\n\twidth: 380px;\n}\n.userbox[data-v-5142db38] {\n\twidth:240px;\n}\n.box-height[data-v-5142db38] {\n\theight: 420px; \n\toverflow-y:scroll;\n}\n.input-chat[data-v-5142db38] {\n\tborder: none;\n\toutline: none;\n\twidth: 100%;\n}\n.btn[data-v-5142db38] {\n\tborder:0;\n\tborder-radius: 0;\n\twidth: 20%;\n\theight: 100%;\n}\n.rounded-bottom-left[data-v-5142db38] {\n\tborder-radius: 0 0 0 4px;\n}\n.rounded-bottom-right[data-v-5142db38] {\n\tborder-radius: 0 0 4px 0;\n}\n.loader[data-v-5142db38] {\n\tz-index: 9999;\n\tposition: absolute;\n\ttop:0;\n\tright:0;\n\tleft:0;\n\tbottom: 0;\n}\n", ""]);
 
 // exports
 
@@ -62522,21 +62532,50 @@ var render = function() {
               "div",
               {
                 directives: [{ name: "chat-scroll", rawName: "v-chat-scroll" }],
-                staticClass: "w-100 p-2 box-height"
+                staticClass: "w-100 p-2 box-height",
+                staticStyle: { position: "relative" }
               },
-              _vm._l(_vm.messages, function(message, index) {
-                return _c(
+              [
+                _vm._l(_vm.messages, function(message, index) {
+                  return _c(
+                    "div",
+                    { key: index },
+                    [
+                      _c("Message", {
+                        attrs: { message: message, self: _vm.user.id }
+                      })
+                    ],
+                    1
+                  )
+                }),
+                _vm._v(" "),
+                _c(
                   "div",
-                  { key: index },
+                  {
+                    staticClass:
+                      "w-auto h-auto d-flex justify-content-center align-items-center loader"
+                  },
                   [
-                    _c("Message", {
-                      attrs: { message: message, self: _vm.user.id }
+                    _c("img", {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.loading,
+                          expression: "loading"
+                        }
+                      ],
+                      attrs: {
+                        height: "50px",
+                        width: "50px",
+                        src: _vm.spinner,
+                        alt: "loading..."
+                      }
                     })
-                  ],
-                  1
+                  ]
                 )
-              }),
-              0
+              ],
+              2
             ),
             _vm._v(" "),
             _c(
@@ -62599,7 +62638,11 @@ var render = function() {
           staticClass: "bg-white shadow chatbox mx-2",
           staticStyle: { height: "520px" }
         },
-        [_c("UserList", { attrs: { users: _vm.users, user: _vm.user } })],
+        [
+          _c("UserList", {
+            attrs: { users: _vm.users, user: _vm.user, room: _vm.room }
+          })
+        ],
         1
       )
     ]
@@ -62627,24 +62670,18 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.message.sent && this.sent === false
-    ? _c("div", { staticClass: "d-flex flex-column mb-2 align-items-end" }, [
-        _c("small", { staticClass: "name text-muted px-2" }, [
-          _vm._v("\n\t\t\t" + _vm._s(_vm.message.user.name) + "\n\t")
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "bg-muted py-2 px-3 rounded text-white message-box" },
-          [
-            _c("div", { staticClass: "message" }, [
-              _vm._v("\t\t\n\t\t\t" + _vm._s(_vm.message.message) + "\n\t\t\t"),
-              _c("small", { staticClass: "text-light font-italic" }, [
-                _vm._v("\n\t\t\t\t- " + _vm._s(_vm.humanizeDate) + "\n\t\t\t")
-              ])
-            ])
-          ]
-        )
+  return _vm.message.loading
+    ? _c("div", { staticClass: "w-100" }, [
+        _c("div", { staticClass: "d-flex justify-content-center" }, [
+          _c("img", {
+            attrs: {
+              src: _vm.spinner,
+              alt: "loading...",
+              height: "30",
+              width: "30"
+            }
+          })
+        ])
       ])
     : _vm.isSelf
     ? _c("div", { staticClass: "d-flex flex-column mb-2 align-items-end" }, [
@@ -62726,8 +62763,12 @@ var render = function() {
               class: { "bg-info": u.id == _vm.user.id }
             },
             [
+              _c("img", {
+                staticClass: "mr-1",
+                attrs: { src: u.avatar, alt: u.name, width: "30", height: "30" }
+              }),
               _vm._v(
-                "\n\t\t\t   \t" +
+                " " +
                   _vm._s(u.name) +
                   " ( " +
                   _vm._s(u.email) +

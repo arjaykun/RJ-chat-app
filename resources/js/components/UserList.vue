@@ -13,7 +13,7 @@
 				  	:key="u.id"
 				  	:class="{'bg-info':u.id==user.id}"
 				  >
-				   	{{ u.name }} ( {{ u.email }} )
+				   	<img :src="u.avatar" :alt="u.name" width="30" height="30" class="mr-1"> {{ u.name }} ( {{ u.email }} )
 				  	<span :ref="'user_'+u.id"></span>
 				  </li>
 				</ul>
@@ -27,12 +27,25 @@
 export default {
 
   name: 'UserList',
-  props: ['users', 'user'],
-  data () {
-    return {
+  props: ['users', 'user', 'room'],
+  created() {
+  	Echo
+  		.join(`chat.${this.room.id}`)
+  		.listenForWhisper('typing', user => { 
+				const userRef = this.$refs["user_"+user.id][0];
+				const classes = ['badge', 'badge-warning'];
+				if(userRef.innerText.trim() == ""){
+					userRef.classList.add(...classes);    
+  			  userRef.innerText = "typing";
 
-    }
-  }
+  			  setTimeout( function() {
+  			  		userRef.classList.remove(...classes);    
+			  			userRef.innerText = "";
+  			  }, 5000)
+				}
+				
+   	 	})
+  },
 }
 </script>
 
