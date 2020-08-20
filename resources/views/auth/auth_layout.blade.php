@@ -32,5 +32,6 @@
 	</div>
 
 	<script src="{{ asset('js/app.js') }}"></script>
+	<script src="https://kit.fontawesome.com/5f55851da7.js" crossorigin="anonymous"></script>
 </body>
 </html>

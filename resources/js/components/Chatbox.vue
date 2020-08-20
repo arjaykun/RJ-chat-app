@@ -5,7 +5,7 @@
 
 				<div class="p-3 bg-primary text-white w-100 rounded-top align-items-center">
 					<h6 class="font-weight-bold" style="padding:0; margin:0;">
-						{{ room.name }}
+						<a href="/" class="text-white"><i class="fas fa-angle-left"> </i></a> {{ room.name }}
 					</h6>
 				</div>
 
@@ -33,7 +33,8 @@
 			    	@click="sendMessage"
 			    	:disabled="sendLoading"
 			    >
-			    	Send
+			    	<i class="fas fa-paper-plane" aria-hidden="true"></i>
+
 			  	</button>
 				</div>
 			</div>
@@ -129,15 +130,15 @@ export default {
 	  			const res = await axios.post('/chat/messages', {message:temp, room_id:this.room.id});
 
 	  			if (res.status === 201 || res.status === 200) {  
-
-		  			this.messages = [...this.messages.filter( m => !m.hasOwnProperty('loading'))]; //delete loading message & then push the actual message
+	  				this.removeSendLoading();
 						this.messages.push({
 		  				message: temp,
 		  				user: this.user,
 						});
 	  			}
 
-  			} catch(err) { 				
+  			} catch(err) { 			
+  					this.removeSendLoading();
 						this.messages.push({
 		  				message: 'Oh snap! Failed to send message.',
         			user: { name: 'System' }
@@ -147,6 +148,10 @@ export default {
   			}
   		}
   	}, 
+
+  	removeSendLoading() {
+		  this.messages = [...this.messages.filter( m => !m.hasOwnProperty('loading'))]; //delete loading message & then push the actual message
+  	},
 
   	async getMessages() {
   		try {

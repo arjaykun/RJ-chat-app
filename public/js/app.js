@@ -1991,6 +1991,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2068,7 +2069,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 if (!(this.message.trim().length > 0)) {
-                  _context.next = 18;
+                  _context.next = 19;
                   break;
                 }
 
@@ -2087,22 +2088,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 res = _context.sent;
 
                 if (res.status === 201 || res.status === 200) {
-                  this.messages = _toConsumableArray(this.messages.filter(function (m) {
-                    return !m.hasOwnProperty('loading');
-                  })); //delete loading message & then push the actual message
-
+                  this.removeSendLoading();
                   this.messages.push({
                     message: temp,
                     user: this.user
                   });
                 }
 
-                _context.next = 15;
+                _context.next = 16;
                 break;
 
               case 12:
                 _context.prev = 12;
                 _context.t0 = _context["catch"](1);
+                this.removeSendLoading();
                 this.messages.push({
                   message: 'Oh snap! Failed to send message.',
                   user: {
@@ -2110,17 +2109,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   }
                 });
 
-              case 15:
-                _context.prev = 15;
+              case 16:
+                _context.prev = 16;
                 this.sendLoading = false;
-                return _context.finish(15);
+                return _context.finish(16);
 
-              case 18:
+              case 19:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[1, 12, 15, 18]]);
+        }, _callee, this, [[1, 12, 16, 19]]);
       }));
 
       function sendMessage() {
@@ -2129,6 +2128,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return sendMessage;
     }(),
+    removeSendLoading: function removeSendLoading() {
+      this.messages = _toConsumableArray(this.messages.filter(function (m) {
+        return !m.hasOwnProperty('loading');
+      })); //delete loading message & then push the actual message
+    },
     getMessages: function getMessages() {
       var _this2 = this;
 
@@ -2279,6 +2283,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'UserList',
   props: ['users', 'user', 'room'],
@@ -2287,20 +2299,20 @@ __webpack_require__.r(__webpack_exports__);
 
     Echo.join("chat.".concat(this.room.id)).listenForWhisper('typing', function (user) {
       var userRef = _this.$refs["user_" + user.id][0];
-      var classes = ['badge', 'badge-warning'];
+      var classes = ['badge', 'badge-primary', 'p-2'];
 
       if (userRef.innerText.trim() == "") {
         var _userRef$classList;
 
         (_userRef$classList = userRef.classList).add.apply(_userRef$classList, classes);
 
-        userRef.innerText = "typing";
+        userRef.innerHTML = "<i class='fas fa-keyboard text-white'> </i>";
         setTimeout(function () {
           var _userRef$classList2;
 
           (_userRef$classList2 = userRef.classList).remove.apply(_userRef$classList2, classes);
 
-          userRef.innerText = "";
+          userRef.innerHTML = "";
         }, 5000);
       }
     });
@@ -62520,9 +62532,8 @@ var render = function() {
                     staticStyle: { padding: "0", margin: "0" }
                   },
                   [
-                    _vm._v(
-                      "\n\t\t\t\t\t" + _vm._s(_vm.room.name) + "\n\t\t\t\t"
-                    )
+                    _vm._m(0),
+                    _vm._v(" " + _vm._s(_vm.room.name) + "\n\t\t\t\t")
                   ]
                 )
               ]
@@ -62624,7 +62635,12 @@ var render = function() {
                     attrs: { type: "button ", disabled: _vm.sendLoading },
                     on: { click: _vm.sendMessage }
                   },
-                  [_vm._v("\n\t\t    \tSend\n\t\t  \t")]
+                  [
+                    _c("i", {
+                      staticClass: "fas fa-paper-plane",
+                      attrs: { "aria-hidden": "true" }
+                    })
+                  ]
                 )
               ]
             )
@@ -62648,7 +62664,16 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("a", { staticClass: "text-white", attrs: { href: "/" } }, [
+      _c("i", { staticClass: "fas fa-angle-left" })
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -62759,21 +62784,29 @@ var render = function() {
             "li",
             {
               key: u.id,
-              staticClass: "list-group-item list-group-item-action",
+              staticClass:
+                "list-group-item list-group-item-action d-flex align-items-center justify-content-between",
               class: { "bg-info": u.id == _vm.user.id }
             },
             [
-              _c("img", {
-                staticClass: "mr-1",
-                attrs: { src: u.avatar, alt: u.name, width: "30", height: "30" }
-              }),
-              _vm._v(
-                " " +
-                  _vm._s(u.name) +
-                  " ( " +
-                  _vm._s(u.email) +
-                  " )\n\t\t\t  \t"
-              ),
+              _c("div", { staticClass: "d-flex align-items-center" }, [
+                _c("img", {
+                  staticClass: "mr-3 rounded-circle",
+                  attrs: {
+                    src: u.avatar,
+                    alt: u.name,
+                    width: "50",
+                    height: "50"
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "mr-2" }, [
+                  _vm._v("\n\t\t\t\t   \t\t" + _vm._s(u.name) + " "),
+                  _c("br"),
+                  _vm._v(" " + _vm._s(u.email) + "\n\t\t\t\t   \t")
+                ])
+              ]),
+              _vm._v(" "),
               _c("span", { ref: "user_" + u.id, refInFor: true })
             ]
           )
@@ -62801,7 +62834,10 @@ var staticRenderFns = [
             staticClass: "font-weight-bold",
             staticStyle: { padding: "0", margin: "0" }
           },
-          [_vm._v("Online Users")]
+          [
+            _c("i", { staticClass: "fas fa-users" }),
+            _vm._v(" Online Users\n\t\t\t")
+          ]
         )
       ]
     )

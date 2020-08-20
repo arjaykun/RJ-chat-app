@@ -11,7 +11,6 @@
 
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
@@ -27,7 +26,7 @@
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto align-items-center">
-            <img src="{{ auth()->user()->avatar }}" alt="{{ auth()->user()->name }}" width="30" height="30">
+            <img src="{{ auth()->user()->avatar }}" alt="{{ auth()->user()->name }}" width="30" height="30" class="rounded-circle">
             <!-- Nav Item - User Information -->
             <li class="nav-item dropdown no-arrow">
 
@@ -56,9 +55,9 @@
     
     <!-- Scripts -->   
     <script>
-      window.host= '{{ config('app.url', 'http://laravel-chat.test') }}';
+      window.host= '{{ config('app.url', 'http://laravel-chat.com') }}';
     </script>
     <script src="{{ asset('js/app.js') }}"></script>
- 
+    <script src="https://kit.fontawesome.com/5f55851da7.js" crossorigin="anonymous"></script>
 </body>
 </html>

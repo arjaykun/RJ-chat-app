@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Auth::routes();
@@ -30,4 +30,8 @@ Route::get('/chat/{room}', 'RoomController@show')->name('rooms.show')->middlewar
 
 Route::get('/chat/{room}/password', 'RoomController@password')->name('rooms.password');
 Route::post('/chat/{room}/password', 'RoomController@confirm')->name('rooms.confirm');
+
+
+Route::get('/login/google', 'Auth\LoginController@redirectToGoogle');
+Route::get('/login/google/callback', 'Auth\LoginController@handleGoogleCallback');
 

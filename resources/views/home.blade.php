@@ -10,7 +10,8 @@
                <a href="/">Chat Rooms</a>
             </h4>
 
-            <a href="{{ route('rooms.create') }}" class="btn btn-sm btn-primary">Add New Room</a>   
+            <a href="{{ route('rooms.create') }}" class="btn btn-sm btn-primary">
+                <i class="fas fa-plus"> </i> Add New Room</a>   
         </div>
 
         <div class="py-1">
@@ -35,7 +36,7 @@
                         {{ $room->name }} 
                         <small class="text-light badge badge-pill badge-dark">( {{ $room->messages_count }} msgs. ) </small>
                     </span>
-                    <a href="{{ route('rooms.show', ['room' => $room->id]) }}" class="btn btn-sm btn-primary">Join</a>
+                    <a href="{{ route('rooms.show', ['room' => $room->id]) }}" class="btn btn-sm btn-primary rounded-circle px-2"><i class="fas fa-angle-right"></i></a>
                 </li>
                 @empty
                 <h5 class="text-center bg-secondary py-5 text-white rounded">No Room found</h5>

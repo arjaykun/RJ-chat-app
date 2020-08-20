@@ -58,13 +58,15 @@
 
         <hr>
 
-         <button type="submit" class="btn btn-primary btn-block rounded">
+         <a href="" class="btn btn-primary btn-block rounded">
+          <i class="fab fa-facebook"> </i> 
           Login w/ Facebook
-        </button>
+        </a>
 
-         <button type="submit" class="btn btn-warning btn-block rounded">
+         <a href="/login/google" class="btn btn-warning btn-block rounded">
+          <i class="fab fa-google"> </i> 
           Login w/ Google
-        </button>
+        </a>
 
         <div class="d-flex justify-content-between pt-4 pb-1">
             <a class="text-primary" href="{{ route('register') }}" >
