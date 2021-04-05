@@ -5,16 +5,16 @@
 * Copy .env.example content to .env
 * Setup database environment
 * Set BROADCAST_DRIVER=pusher
-* Setup pusher environment
+* Setup your own pusher environment
 * Set APP_URL to your url
 
-* Install composer dependencies
+* Install composer dependencies /s/s
 `composer update`
 
-* Generate Key 
+* Generate Key /s/s
 `php artisan key:generate`
 
-* Migrate to database
+* Migrate to database /s/s
 `php artisan migrate`
 
 
