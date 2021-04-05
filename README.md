@@ -9,6 +9,7 @@
 * Set APP_URL to your url
 
 * Install composer dependencies, generate key & migrate database
+
 `composer update`
 
 `php artisan key:generate`
