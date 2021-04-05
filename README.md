@@ -8,13 +8,13 @@
 * Setup your own pusher environment
 * Set APP_URL to your url
 
-* Install composer dependencies /s/s
+* Install composer dependencies/s/s
 `composer update`
 
-* Generate Key /s/s
+* Generate Key/s/s
 `php artisan key:generate`
 
-* Migrate to database /s/s
+* Migrate to database/s/s
 `php artisan migrate`
 
 
